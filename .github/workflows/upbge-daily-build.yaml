@@ -1,0 +1,98 @@
+name: UPBGE daily build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * *"
+  push:
+    branches:
+      - main
+      - ci_testing
+  pull_request:
+
+env:
+  PYTHON_VERSION: "3.9"
+
+jobs:
+  build_blender:
+    name: Build UPBGE
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: "${{env.PYTHON_VERSION}}"
+
+      - name: Setup Python Path
+        run: |
+          sudo sh -c "echo '$pythonLocation/lib' >> /etc/ld.so.conf.d/python.conf" && \
+          sudo ldconfig
+
+      - name: Install Python Dependencies
+        run: |
+          curl https://bootstrap.pypa.io/get-pip.py | python && \
+          pip install numpy==1.17.4 requests
+
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y \
+              build-essential \
+              cmake libembree-dev \
+              libxi-dev \
+              libxxf86vm-dev \
+              libboost-dev \
+              libboost-locale-dev \
+              libgl1-mesa-dev \
+              libavformat-dev \
+              libtbb-dev \
+              libswscale-dev \
+              libavdevice-dev \
+              libblas3 \
+              libzstd-dev
+
+      - name: Checkout UPBGE sources from GitHub
+        uses: actions/checkout@v2
+        with:
+          repository: "UPBGE/upbge"
+          ref: "master"
+          path: "upbge"
+
+      - name: Update submodules
+        run: git -C upbge submodule update --init --recursive --remote
+
+      - name: Configure CMake
+        run: |
+          cmake -S upbge -B build \
+            -C upbge/build_files/cmake/config/blender_release.cmake \
+            -DWITH_GAMEENGINE=ON \
+            -DWITH_PLAYER=OFF \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DWITH_INSTALL_PORTABLE=ON \
+            -DWITH_MOD_OCEANSIM=OFF \
+            -DWITH_CYCLES=OFF \
+            -DPYTHON_VERSION=${{env.PYTHON_VERSION}}
+
+      - name: Build UPBGE
+        run: |
+          make -C build -j `nproc`
+          make -C build install
+
+      - name: Compress UPBGE for the artifacts
+        run: |
+          mkdir release
+          cp -r build/bin release/upbge
+          cd release
+          tar Jcf upbge.tar.xz upbge
+          rm -rf upbge
+
+      - name: Create MD5 checksum file
+        run: |
+          cd release
+          md5sum upbge.tar.xz > upbge.tar.xz.md5
+
+      - name: Upload artifact 
+        uses: actions/upload-artifact@v2
+        with:
+          name: upbge
+          path: "release"
