@@ -31,7 +31,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           curl https://bootstrap.pypa.io/get-pip.py | python && \
-          pip install numpy==1.17.4 requests
+          pip install numpy==1.17.4 requests cython
 
       - name: Install dependencies
         run: |
