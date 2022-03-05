@@ -49,7 +49,8 @@ jobs:
               libswscale-dev \
               libavdevice-dev \
               libblas3 \
-              libzstd-dev
+              libzstd-dev \
+              potrace
 
       - name: Checkout UPBGE sources from GitHub
         uses: actions/checkout@v2
