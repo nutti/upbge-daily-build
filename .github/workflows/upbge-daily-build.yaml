@@ -50,7 +50,9 @@ jobs:
               libavdevice-dev \
               libblas3 \
               libzstd-dev \
-              potrace
+              libopenal-dev \
+              libopenblas-dev \
+              libopenimageio-dev
 
       - name: Checkout UPBGE sources from GitHub
         uses: actions/checkout@v2
