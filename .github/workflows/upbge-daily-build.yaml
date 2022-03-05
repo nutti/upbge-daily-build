@@ -11,7 +11,7 @@ on:
   pull_request:
 
 env:
-  PYTHON_VERSION: "3.9"
+  PYTHON_VERSION: "3.10"
 
 jobs:
   build_blender:
@@ -31,7 +31,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           curl https://bootstrap.pypa.io/get-pip.py | python && \
-          pip install numpy==1.17.4 requests cython
+          pip install numpy requests cython zstandard
 
       - name: Install dependencies
         run: |
@@ -49,7 +49,10 @@ jobs:
               libswscale-dev \
               libavdevice-dev \
               libblas3 \
-              libzstd-dev
+              libzstd-dev \
+              libopenal-dev \
+              libopenblas-dev \
+              libopenimageio-dev
 
       - name: Checkout UPBGE sources from GitHub
         uses: actions/checkout@v2
