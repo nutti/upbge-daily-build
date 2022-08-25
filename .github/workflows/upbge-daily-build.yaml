@@ -53,7 +53,8 @@ jobs:
               libzstd-dev \
               libopenal-dev \
               libopenblas-dev \
-              libopenimageio-dev
+              libopenimageio-dev \
+              libepoxy-dev
 
       - name: Checkout UPBGE sources from GitHub
         uses: actions/checkout@v2
