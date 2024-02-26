@@ -13,7 +13,7 @@ on:
 jobs:
   build_upbge:
     name: Build UPBGE
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout UPBGE sources from GitHub
         uses: actions/checkout@v2
@@ -21,28 +21,23 @@ jobs:
           repository: "UPBGE/upbge"
           ref: "master"
           path: upbge-build/upbge
-
-      - name: Install apt packages
+      - name: Install initial packages
         run: |
           sudo apt update
-          sudo apt install -y python3 git libglfw3 libgles2-mesa-dev
-
-      - name: Install dependencies
+          sudo apt install python3 git git-lfs
+      - name: Install basic building environment
         run: |
-          ./upbge-build/upbge/build_files/build_environment/install_linux_packages.py
-
-      - name: Install libraries
+          cd upbge-build/upbge
+          ./build_files/build_environment/install_linux_packages.py
+      - name: Download libraries
         run: |
-          mkdir -p ./upbge-build/lib
-          cd ./upbge-build/lib
-          svn checkout https://svn.blender.org/svnroot/bf-blender/trunk/lib/linux_x86_64_glibc_228
-
+          cd upbge-build/upbge
+          ./build_files/utils/make_update.py --use-linux-libraries
       - name: Build UPBGE
         run: |
-          cd ./upbge-build/upbge
+          cd upbge-build/upbge
           make update
           make
-
       - name: Compress UPBGE for the artifacts
         run: |
           mkdir release
@@ -50,22 +45,18 @@ jobs:
           cd release
           tar Jcf upbge.tar.xz upbge
           rm -rf upbge
-
       - name: Create MD5 checksum file
         run: |
           cd release
           md5sum upbge.tar.xz > upbge.tar.xz.md5
-
       - name: Upload artifact 
         uses: actions/upload-artifact@v2
         with:
           name: upbge
           path: "release"
-
       - name: Collect failure state
         if: failure()
         run: cp -r build failure_state
-
       - name: Store failure state
         if: failure()
         uses: actions/upload-artifact@v2
