@@ -50,7 +50,7 @@ jobs:
           cd release
           md5sum upbge.tar.xz > upbge.tar.xz.md5
       - name: Upload artifact 
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: upbge
           path: "release"
@@ -59,7 +59,7 @@ jobs:
         run: cp -r build failure_state
       - name: Store failure state
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: failure_state
           path: failure_state
