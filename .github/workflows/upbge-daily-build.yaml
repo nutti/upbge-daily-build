@@ -39,12 +39,14 @@ jobs:
           cd upbge-build/upbge
           make update
           make
+      - name: Test UPBGE
+        run: |
+          ./upbge-build/build_linux/bin/blender --background --factory-startup -noaudio
       - name: Compress UPBGE for the artifacts
         run: |
           mkdir release
           cp -r ./upbge-build/build_linux/bin release/upbge
           cd release
-          ./release/upbge/blender --background --factory-startup -noaudio
           tar Jcf upbge.tar.xz upbge
           rm -rf upbge
       - name: Create MD5 checksum file
