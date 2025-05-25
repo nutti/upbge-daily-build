@@ -43,6 +43,7 @@ jobs:
           mkdir release
           cp -r ./upbge-build/build_linux/bin release/upbge
           cd release
+          ./release/upbge/blender --background --factory-startup -noaudio
           tar Jcf upbge.tar.xz upbge
           rm -rf upbge
       - name: Create MD5 checksum file
