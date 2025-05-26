@@ -21,6 +21,7 @@ jobs:
           repository: "UPBGE/upbge"
           ref: "master"
           path: upbge-build/upbge
+          submodules: recursive
       - name: Install initial packages
         run: |
           sudo apt update
