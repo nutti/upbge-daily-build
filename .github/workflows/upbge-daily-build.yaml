@@ -16,12 +16,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout UPBGE sources from GitHub
-        uses: actions/checkout@v3
-        with:
-          repository: "UPBGE/upbge"
-          ref: "master"
-          path: upbge-build/upbge
-          submodules: recursive
+        run: |
+          mkdir -p upbge-build
+          cd upbge-build
+          git clone https://github.com/UPBGE/upbge.git
       - name: Install initial packages
         run: |
           sudo apt update
