@@ -19,7 +19,7 @@ jobs:
         run: |
           mkdir -p upbge-build
           cd upbge-build
-          git clone https://github.com/UPBGE/upbge.git
+          git clone --recursive https://github.com/UPBGE/upbge.git
       - name: Install initial packages
         run: |
           sudo apt update
