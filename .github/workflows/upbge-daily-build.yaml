@@ -20,6 +20,9 @@ jobs:
           mkdir -p upbge-build
           cd upbge-build
           git clone --recursive https://github.com/UPBGE/upbge.git
+          cd upbge
+          git lfs pull lfs-fallback
+          cd ..
       - name: Install initial packages
         run: |
           sudo apt update
