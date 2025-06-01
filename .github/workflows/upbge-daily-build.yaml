@@ -21,6 +21,7 @@ jobs:
           cd upbge-build
           git clone --recursive https://github.com/UPBGE/upbge.git
           cd upbge
+          make update || cd test && git reset --hard && cd ..
           git lfs pull lfs-fallback
           cd ..
       - name: Install initial packages
