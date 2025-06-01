@@ -16,11 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout UPBGE sources from GitHub
-        uses: actions/checkout@v2
-        with:
-          repository: "UPBGE/upbge"
-          ref: "master"
-          path: upbge-build/upbge
+        run: |
+          mkdir -p upbge-build
+          cd upbge-build
+          git clone --recursive https://github.com/UPBGE/upbge.git
+          cd upbge
+          make update
+          git lfs pull lfs-fallback
+          cd ..
       - name: Install initial packages
         run: |
           sudo apt update
@@ -38,6 +41,9 @@ jobs:
           cd upbge-build/upbge
           make update
           make
+      - name: Test UPBGE Binary
+        run: |
+          ./upbge-build/build_linux/bin/blender --background --factory-startup -noaudio
       - name: Compress UPBGE for the artifacts
         run: |
           mkdir release
