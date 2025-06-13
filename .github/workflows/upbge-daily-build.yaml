@@ -19,7 +19,7 @@ jobs:
         run: |
           mkdir -p upbge-build
           cd upbge-build
-          git clone --recursive https://github.com/UPBGE/upbge.git
+          GIT_LFS_SKIP_SMUDGE=1 git clone --recursive https://github.com/UPBGE/upbge.git
           cd upbge
           make update
           git lfs pull lfs-fallback
