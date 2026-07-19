@@ -39,7 +39,7 @@ jobs:
       - name: Install basic building environment
         run: |
           cd upbge-build/upbge
-          ./build_files/build_environment/install_linux_packages.py
+          ./build_files/linux/install_linux_packages.py
       - name: Download libraries
         run: |
           cd upbge-build/upbge
